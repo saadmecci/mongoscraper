@@ -20,6 +20,11 @@ mongoose.connect("mongodb://localhost/newsArticleScraper", {
 	useMongoClient: true
 });
 
+//set Handlebars.
+var exphbs = require("express-handlebars");
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
+
 //get route for scraping the New York Times home page
 app.get("/scrape", function (req, res) {
 	//get the body of the html
