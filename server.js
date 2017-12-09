@@ -19,29 +19,55 @@ mongoose.Promise = Promise;
 mongoose.connect("mongodb://localhost/newsArticleScraper", {
 	useMongoClient: true
 });
+
 //get route for scraping the New York Times home page
 app.get("/scrape", function (req, res) {
 	//get the body of the html
 	axios.get("https://www.nytimes.com/").then(function (results) {
-
+		//load the results into cheerio
 		var $ = cheerio.load(results.data);
-
-		$("article h2").each(function (i, element) {
-
+		//get the h2 within each article tag
+		$("article").each(function (i, element) {
+			//empty object to store the article information
 			var article = {};
-
-			article.title = $(this).children("a").text();
-
-			article.link = $(this).children("a").attr("href");
-
-			console.log(article);
+			//save the NYT articles' titles and links into the article object
+			article.title = $(this).children("h2").children("a").text();
+			article.link = $(this).children("h2").children("a").attr("href");
+			article.summary = $(this).children("p").text();
+			//create a new Article model using the article object created from the scrape
+			//if statement fixes issue with article tag sometimes returning empty info
+			if (article.title != "") {
+				db.Article
+				.create(article)
+				.then(function (dbArticle) {
+					//if the scrape is successful, send this message
+					res.send("Scrape sucessful!")
+				})
+				.catch(function (error) {
+					//if error, send the error
+					res.json(error);
+				});
+			}
 		});
 	});
 });
 
+//get route for getting the articles from the database
+app.get("/articles", function (req, res) {
+	//get all the articles stored in Articles collection
+	db.Article
+		.find({})
+		.then(function (dbArticle) {
+			//send the stored articles to the client in JSON format
+			res.json(dbArticle);
+		})
+		.catch(function (error) {
+			//if error occurs, send the error to the client
+			res.json(error);
+		});
+});
 
-
-
+//start the server on port 3000
 app.listen(PORT, function() {
 	console.log("App is running on port " + PORT + ".");
 });

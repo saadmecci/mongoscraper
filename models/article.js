@@ -14,6 +14,9 @@ var ArticleSchema = new Schema({
 		type: String,
 		required: true
 	},
+	summary: {
+		type: String,
+	},
 	//connects to the comment model so that the article will have the comments associated with it
 	comment: {
 		type: Schema.Types.ObjectId,
