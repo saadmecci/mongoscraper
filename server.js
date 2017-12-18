@@ -20,7 +20,7 @@ mongoose.connect("mongodb://localhost/newsArticleScraper", {
 	useMongoClient: true
 });
 
-//set Handlebars.
+//set handlebars.
 var exphbs = require("express-handlebars");
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
@@ -41,7 +41,7 @@ app.get("/scrape", function (req, res) {
 			article.summary = $(this).children("p").text();
 			//create a new Article model using the article object created from the scrape
 			//if statement fixes issue with article tag sometimes returning empty info
-			if (article.title != "") {
+			if (article.title !== "") {
 				db.Article
 				.create(article)
 				.then(function (dbArticle) {
@@ -58,13 +58,17 @@ app.get("/scrape", function (req, res) {
 });
 
 //get route for getting the articles from the database
-app.get("/articles", function (req, res) {
+app.get("/", function (req, res) {
 	//get all the articles stored in Articles collection
 	db.Article
 		.find({})
 		.then(function (dbArticle) {
-			//send the stored articles to the client in JSON format
-			res.json(dbArticle);
+			//create an object to render into handlebars
+			var articlesObject = {
+				articles: dbArticle
+			}
+			//send the stored articles to the client
+			res.render("index", articlesObject);
 		})
 		.catch(function (error) {
 			//if error occurs, send the error to the client
