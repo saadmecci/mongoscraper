@@ -21,7 +21,7 @@ if (process.env.NODE_ENV || "dev" == "dev") {
 	mongoose.connect("mongodb://localhost/newsArticleScraper", {
 	useMongoClient: true
 })} else {
-	mongoose.connect("mongodb://heroku_xmb8sn12", {
+	mongoose.connect("heroku_xmb8sn12", {
 	useMongoClient: true
 })};
 
