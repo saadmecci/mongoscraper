@@ -1,8 +1,13 @@
 body {
-	background-color: #BFD0FF;
+	background-color: #ff9696;
 }
 
 .jumbotron {
 	text-align: center;
-	background-color: #C3D7FF;
+	background-color: #ffd5a1;
+}
+
+#viewComments, #submitComment {
+	background-color: #d8edff;
+	color: black;
 }
