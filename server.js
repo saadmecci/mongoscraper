@@ -16,9 +16,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static("public"));
 //use ES6 promises in mongoose
 mongoose.Promise = Promise;
-mongoose.connect("mongodb://localhost/newsArticleScraper", {
+
+if (process.env.NODE_ENV || "dev" == "dev") {
+	mongoose.connect("mongodb://localhost/newsArticleScraper", {
 	useMongoClient: true
-});
+})} else {
+	mongoose.connect("mongodb://<dbuser>:<dbpassword>@ds117878.mlab.com:17878/heroku_xmb8sn12", {
+	useMongoClient: true
+})};
 
 //set handlebars.
 var exphbs = require("express-handlebars");
